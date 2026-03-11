@@ -1,0 +1,66 @@
+AUTOPAZAR COMMANDS
+
+1. OPEN PROJECT
+cd /home/joce/autopazar
+source .venv/bin/activate
+
+2. LOCAL START
+python manage.py runserver
+python manage.py runserver 8001
+
+3. DATABASE SETUP
+python manage.py migrate
+python manage.py createsuperuser
+
+4. REFERENCE DATA AND DEMO DATA
+python manage.py sync_reference_data
+python manage.py seed_demo_data
+
+5. CELERY
+celery -A config worker -l info
+
+6. TESTS
+pytest
+pytest tests/test_reference_data.py -q
+
+7. DJANGO CHECKS
+python manage.py check
+python manage.py shell
+
+8. LOG IN DEMO USERS
+user1@autopazar.mk
+user2@autopazar.mk
+user3@autopazar.mk
+user4@autopazar.mk
+Password: DemoPass123!
+
+9. USEFUL URLS
+http://127.0.0.1:8000/
+http://127.0.0.1:8000/admin/
+http://127.0.0.1:8000/korisnici/najava/
+http://127.0.0.1:8000/korisnici/odjava/
+
+10. DOCKER
+docker compose up --build
+docker compose exec web python manage.py migrate
+docker compose exec web python manage.py sync_reference_data
+docker compose exec web python manage.py seed_demo_data
+docker compose exec web python manage.py createsuperuser
+
+11. POSTGRESQL SERVICE
+sudo systemctl start postgresql
+sudo systemctl status postgresql
+
+12. REDIS SERVICE
+sudo systemctl start redis-server
+sudo systemctl status redis-server
+
+13. PORT 8000 HELP
+lsof -i :8000
+pkill -f runserver
+
+14. SHOW USERS
+python manage.py shell -c "from django.contrib.auth import get_user_model; U=get_user_model(); [print(u.email) for u in U.objects.order_by('id')]"
+
+15. SHOW LISTINGS BY USER
+python manage.py shell -c "from collections import defaultdict; from apps.listings.models import Listing; data=defaultdict(list); [data[l.seller.email].append(f'[{l.id}] {l.title} - {l.get_status_display()}') for l in Listing.objects.select_related('seller').order_by('seller__email','id')]; [print('\\n'+email) or [print('  '+item) for item in items] for email, items in data.items()]"

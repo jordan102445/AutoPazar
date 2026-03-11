@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}{{ seller.profile.full_name }} | AutoPazar{% endblock title %}
+
+{% block content %}
+  <section class="space-y-8">
+    <div class="rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm">
+      <div class="flex flex-col gap-6 md:flex-row md:items-center md:justify-between">
+        <div class="flex items-center gap-5">
+          <img src="{{ seller.profile.avatar_url }}" alt="{{ seller.profile.full_name }}" class="h-20 w-20 rounded-3xl object-cover">
+          <div>
+            <p class="text-sm font-bold uppercase tracking-[0.2em] text-slate-500">Продавач</p>
+            <h1 class="text-3xl font-black tracking-tight text-slate-950">{{ seller.profile.full_name }}</h1>
+            <p class="mt-2 text-sm text-slate-600">
+              {% if seller.profile.city %}{{ seller.profile.city.name }}{% endif %} | Член од {{ seller.date_joined|date:"d.m.Y" }}
+            </p>
+          </div>
+        </div>
+        <div class="rounded-3xl bg-slate-50 px-6 py-5 text-center">
+          <p class="text-xs uppercase tracking-[0.2em] text-slate-500">Активни огласи</p>
+          <p class="mt-2 text-3xl font-black">{{ active_listings|length }}</p>
+        </div>
+      </div>
+      {% if seller.profile.bio %}
+        <p class="mt-6 max-w-3xl text-slate-600">{{ seller.profile.bio }}</p>
+      {% endif %}
+    </div>
+
+    <section>
+      <div class="mb-6">
+        <p class="text-sm font-bold uppercase tracking-[0.2em] text-slate-500">Огласи</p>
+        <h2 class="text-3xl font-black tracking-tight text-slate-950">Активни огласи од продавачот</h2>
+      </div>
+      <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+        {% for listing in active_listings %}
+          {% include "includes/listing_card.html" with listing=listing %}
+        {% empty %}
+          <p class="rounded-3xl border border-dashed border-slate-300 bg-white p-8 text-slate-500">Нема активни огласи.</p>
+        {% endfor %}
+      </div>
+    </section>
+  </section>
+{% endblock content %}

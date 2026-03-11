@@ -1,0 +1,34 @@
+@import url("https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply font-sans antialiased;
+  }
+
+  ::selection {
+    @apply bg-amber-200 text-slate-900;
+  }
+}
+
+@layer components {
+  .success {
+    @apply border-emerald-200 bg-emerald-50 text-emerald-800;
+  }
+
+  .warning {
+    @apply border-amber-200 bg-amber-50 text-amber-800;
+  }
+
+  .error {
+    @apply border-rose-200 bg-rose-50 text-rose-800;
+  }
+
+  .info {
+    @apply border-sky-200 bg-sky-50 text-sky-800;
+  }
+}
+

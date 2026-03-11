@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block title %}Омилени огласи | AutoPazar{% endblock title %}
+
+{% block content %}
+  <section>
+    <div class="mb-6">
+      <p class="text-sm font-bold uppercase tracking-[0.2em] text-slate-500">Омилени</p>
+      <h1 class="text-3xl font-black tracking-tight text-slate-950">Зачувани огласи</h1>
+    </div>
+    <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+      {% for favorite in favorites %}
+        {% include "includes/listing_card.html" with listing=favorite.listing %}
+      {% empty %}
+        <p class="rounded-3xl border border-dashed border-slate-300 bg-white p-8 text-slate-500">Немаш зачувани огласи.</p>
+      {% endfor %}
+    </div>
+    {% include "includes/pagination.html" %}
+  </section>
+{% endblock content %}

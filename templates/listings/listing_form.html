@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}{{ page_title }} | AutoPazar{% endblock title %}
+
+{% block content %}
+  <section class="mx-auto max-w-5xl rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm">
+    <div class="mb-8 flex items-center justify-between gap-4">
+      <div>
+        <p class="text-sm font-bold uppercase tracking-[0.2em] text-slate-500">Контролна табла</p>
+        <h1 class="mt-2 text-3xl font-black tracking-tight text-slate-950">{{ page_title }}</h1>
+      </div>
+      <a href="{% url 'users:dashboard' %}" class="rounded-full border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700">Назад</a>
+    </div>
+
+    <form method="post" enctype="multipart/form-data" class="space-y-8">
+      {% csrf_token %}
+      <div class="grid gap-6 md:grid-cols-2">
+        {% for field in form %}
+          <div class="{% if field.name == 'description' %}md:col-span-2{% endif %}">
+            {% include "includes/form_field.html" with field=field %}
+          </div>
+        {% endfor %}
+      </div>
+
+      {% if image_formset %}
+        <section class="rounded-[28px] border border-slate-200 bg-slate-50 p-6">
+          <h2 class="text-xl font-black tracking-tight text-slate-950">Постоечки фотографии</h2>
+          {{ image_formset.management_form }}
+          <div class="mt-6 space-y-5">
+            {% for image_form in image_formset %}
+              <div class="grid gap-4 rounded-3xl border border-slate-200 bg-white p-5 md:grid-cols-[160px_1fr]">
+                <div class="aspect-[4/3] overflow-hidden rounded-2xl bg-slate-100">
+                  <img src="{{ image_form.instance.image.url }}" alt="" class="h-full w-full object-cover">
+                </div>
+                <div class="grid gap-4">
+                  {% for hidden in image_form.hidden_fields %}{{ hidden }}{% endfor %}
+                  {% for field in image_form.visible_fields %}
+                    {% include "includes/form_field.html" with field=field %}
+                  {% endfor %}
+                </div>
+              </div>
+            {% endfor %}
+          </div>
+        </section>
+      {% endif %}
+
+      <div class="flex flex-wrap gap-3">
+        <button type="submit" name="submit_action" value="draft" class="rounded-full border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700">Зачувај како нацрт</button>
+        <button type="submit" name="submit_action" value="publish" class="rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white">Испрати на одобрување</button>
+      </div>
+    </form>
+  </section>
+{% endblock content %}

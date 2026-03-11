@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block title %}Најава | AutoPazar{% endblock title %}
+
+{% block content %}
+  <section class="mx-auto max-w-md rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm">
+    <p class="text-sm font-bold uppercase tracking-[0.2em] text-slate-500">Најава</p>
+    <h1 class="mt-2 text-3xl font-black tracking-tight text-slate-950">Најави се во профилот</h1>
+    <form method="post" class="mt-8 space-y-5">
+      {% csrf_token %}
+      {% for field in form %}
+        {% include "includes/form_field.html" with field=field %}
+      {% endfor %}
+      <button type="submit" class="w-full rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white">Најава</button>
+    </form>
+    <div class="mt-6 flex items-center justify-between text-sm">
+      <a href="{% url 'users:password-reset' %}" class="font-semibold text-slate-700">Заборавена лозинка?</a>
+      <a href="{% url 'users:register' %}" class="font-semibold text-slate-900">Регистрација</a>
+    </div>
+  </section>
+{% endblock content %}

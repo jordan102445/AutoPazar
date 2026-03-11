@@ -1,0 +1,18 @@
+<form
+  method="post"
+  action="{% url 'messaging:create' listing.slug %}"
+  class="space-y-4"
+  hx-post="{% url 'messaging:create' listing.slug %}"
+  hx-target="#inquiry-panel"
+  hx-swap="innerHTML"
+>
+  {% csrf_token %}
+  {% for field in inquiry_form %}
+    {% if field.name != 'website' %}
+      {% include "includes/form_field.html" with field=field %}
+    {% else %}
+      {{ field }}
+    {% endif %}
+  {% endfor %}
+  <button type="submit" class="w-full rounded-2xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white transition hover:bg-slate-700">Испрати порака</button>
+</form>

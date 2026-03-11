@@ -1,0 +1,88 @@
+{% extends "base.html" %}
+
+{% block title %}Контролна табла | AutoPazar{% endblock title %}
+
+{% block content %}
+  <section class="space-y-8">
+    <div class="grid gap-6 lg:grid-cols-[0.9fr_1.1fr]">
+      <div class="rounded-[32px] bg-slate-900 p-8 text-white shadow-2xl">
+        <p class="text-sm font-bold uppercase tracking-[0.2em] text-amber-300">Контролна табла</p>
+        <h1 class="mt-2 text-4xl font-black tracking-tight">{{ request.user.profile.full_name }}</h1>
+        <p class="mt-4 text-sm text-slate-300">{{ request.user.email }}</p>
+        <div class="mt-6 flex flex-wrap gap-3">
+          <a href="{% url 'users:profile' %}" class="rounded-full bg-white px-5 py-3 text-sm font-semibold text-slate-900">Измени профил</a>
+          <a href="{% url 'listings:create' %}" class="rounded-full border border-white/20 px-5 py-3 text-sm font-semibold text-white">Нов оглас</a>
+        </div>
+      </div>
+      <div class="grid gap-4 sm:grid-cols-2">
+        <div class="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm"><p class="text-xs uppercase tracking-[0.2em] text-slate-500">Активни</p><p class="mt-3 text-3xl font-black">{{ stats.active }}</p></div>
+        <div class="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm"><p class="text-xs uppercase tracking-[0.2em] text-slate-500">На модерација</p><p class="mt-3 text-3xl font-black">{{ stats.pending }}</p></div>
+        <div class="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm"><p class="text-xs uppercase tracking-[0.2em] text-slate-500">Омилени</p><p class="mt-3 text-3xl font-black">{{ stats.favorites }}</p></div>
+        <div class="rounded-[28px] border border-slate-200 bg-white p-6 shadow-sm"><p class="text-xs uppercase tracking-[0.2em] text-slate-500">Нови пораки</p><p class="mt-3 text-3xl font-black">{{ stats.inquiries }}</p></div>
+      </div>
+    </div>
+
+    <section class="grid gap-8 xl:grid-cols-[1.2fr_0.8fr]">
+      <div class="rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm">
+        <div class="mb-6 flex items-center justify-between">
+          <div>
+            <p class="text-sm font-bold uppercase tracking-[0.2em] text-slate-500">Мои огласи</p>
+            <h2 class="text-2xl font-black tracking-tight text-slate-950">Управување со огласи</h2>
+          </div>
+          <a href="{% url 'listings:create' %}" class="rounded-full bg-slate-900 px-4 py-2 text-sm font-semibold text-white">Нов оглас</a>
+        </div>
+        <div class="space-y-4">
+          {% for listing in recent_listings %}
+            <div class="grid gap-4 rounded-3xl border border-slate-200 p-5 lg:grid-cols-[1fr_auto]">
+              <div>
+                <a href="{% url 'listings:detail' listing.slug %}" class="text-lg font-bold tracking-tight text-slate-950">{{ listing.title }}</a>
+                <p class="mt-1 text-sm text-slate-500">{{ listing.city.name }} | {{ listing.display_price }} | {{ listing.get_status_display }}</p>
+              </div>
+              <div class="flex flex-wrap gap-2">
+                <a href="{% url 'listings:update' listing.slug %}" class="rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700">Измени</a>
+                <form method="post" action="{% url 'listings:status' listing.slug %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="mark_sold">
+                  <button type="submit" class="rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700">Продадено</button>
+                </form>
+                <form method="post" action="{% url 'listings:status' listing.slug %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="action" value="archive">
+                  <button type="submit" class="rounded-full border border-slate-300 px-4 py-2 text-xs font-semibold text-slate-700">Архивирај</button>
+                </form>
+              </div>
+            </div>
+          {% empty %}
+            <p class="rounded-3xl border border-dashed border-slate-300 p-8 text-slate-500">Сè уште немаш огласи.</p>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm">
+        <div class="mb-6 flex items-center justify-between">
+          <div>
+            <p class="text-sm font-bold uppercase tracking-[0.2em] text-slate-500">Пораки</p>
+            <h2 class="text-2xl font-black tracking-tight text-slate-950">Последни пораки</h2>
+          </div>
+          <a href="{% url 'messaging:inbox' %}" class="text-sm font-semibold text-slate-700">Сите</a>
+        </div>
+        <div class="space-y-4">
+          {% for item in recent_inquiries %}
+            <div class="rounded-3xl bg-slate-50 p-5">
+              <div class="flex items-center justify-between gap-3">
+                <div>
+                  <p class="font-semibold text-slate-900">{{ item.sender_name }}</p>
+                  <p class="text-sm text-slate-500">{{ item.listing.title }}</p>
+                </div>
+                <span class="rounded-full bg-white px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">{{ item.get_status_display }}</span>
+              </div>
+              <p class="mt-3 text-sm text-slate-600">{{ item.message|truncatechars:120 }}</p>
+            </div>
+          {% empty %}
+            <p class="rounded-3xl border border-dashed border-slate-300 p-8 text-slate-500">Нема пристигнати пораки.</p>
+          {% endfor %}
+        </div>
+      </div>
+    </section>
+  </section>
+{% endblock content %}

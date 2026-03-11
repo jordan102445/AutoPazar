@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Профил | AutoPazar{% endblock title %}
+
+{% block content %}
+  <section class="mx-auto max-w-3xl rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm">
+    <div class="mb-8 flex items-center justify-between">
+      <div>
+        <p class="text-sm font-bold uppercase tracking-[0.2em] text-slate-500">Профил</p>
+        <h1 class="mt-2 text-3xl font-black tracking-tight text-slate-950">Мој профил</h1>
+      </div>
+      <p class="text-sm text-slate-500">Член од {{ request.user.date_joined|date:"d.m.Y" }}</p>
+    </div>
+    <form method="post" enctype="multipart/form-data" class="grid gap-6 md:grid-cols-2">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="{% if field.name == 'bio' %}md:col-span-2{% endif %}">
+          {% include "includes/form_field.html" with field=field %}
+        </div>
+      {% endfor %}
+      <div class="md:col-span-2 flex flex-wrap gap-3">
+        <button type="submit" class="rounded-full bg-slate-900 px-5 py-3 text-sm font-semibold text-white">Зачувај промени</button>
+        <a href="{% url 'users:dashboard' %}" class="rounded-full border border-slate-300 px-5 py-3 text-sm font-semibold text-slate-700">Контролна табла</a>
+      </div>
+    </form>
+  </section>
+{% endblock content %}

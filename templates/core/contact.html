@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block title %}Контакт | AutoPazar{% endblock title %}
+
+{% block content %}
+  <section class="mx-auto max-w-3xl rounded-[32px] border border-slate-200 bg-white p-8 shadow-sm">
+    <p class="text-sm font-bold uppercase tracking-[0.2em] text-slate-500">Контакт</p>
+    <h1 class="mt-2 text-3xl font-black tracking-tight text-slate-950">Поддршка и информации</h1>
+    <p class="mt-4 text-slate-600">
+      За прашања, проблеми со оглас или пријава за злоупотреба, контактирај нè на
+      <a href="mailto:support@autopazar.mk" class="font-semibold text-slate-900">support@autopazar.mk</a>.
+    </p>
+    <div class="mt-8 grid gap-4 sm:grid-cols-2">
+      <div class="rounded-3xl bg-slate-50 p-6">
+        <p class="text-sm font-bold text-slate-900">За корисници</p>
+        <p class="mt-2 text-sm text-slate-600">Помош за објавување, најава, омилени огласи и пораки.</p>
+      </div>
+      <div class="rounded-3xl bg-slate-50 p-6">
+        <p class="text-sm font-bold text-slate-900">За модерација</p>
+        <p class="mt-2 text-sm text-slate-600">Пријави сомнителен оглас или побарај интервенција од админ тимот.</p>
+      </div>
+    </div>
+  </section>
+{% endblock content %}

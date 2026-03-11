@@ -1,0 +1,8 @@
+Имате нова порака за огласот „{{ inquiry.listing.title }}“.
+
+Име: {{ inquiry.sender_name }}
+Е-пошта: {{ inquiry.sender_email }}
+Телефон: {{ inquiry.sender_phone }}
+
+Порака:
+{{ inquiry.message }}
