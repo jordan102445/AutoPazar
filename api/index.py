@@ -1,5 +1,5 @@
 import os
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "config.settings.production")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "api.settings")
 
-from config.wsgi import app
+from api.wsgi import app

@@ -36,10 +36,10 @@ dev = [
 ]
 
 [project.scripts]
-app = "config.wsgi:app"
+app = "api.wsgi:app"
 
 [tool.setuptools.packages.find]
-include = ["apps*", "config*"]
+include = ["api*", "apps*", "config*"]
 
 [tool.black]
 line-length = 100

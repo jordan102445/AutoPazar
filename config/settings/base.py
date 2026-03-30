@@ -65,7 +65,7 @@ MIDDLEWARE = [
     "django_htmx.middleware.HtmxMiddleware",
 ]
 
-ROOT_URLCONF = "config.urls"
+ROOT_URLCONF = "api.urls"
 
 TEMPLATES = [
     {
@@ -84,7 +84,7 @@ TEMPLATES = [
     }
 ]
 
-WSGI_APPLICATION = "config.wsgi.app"
+WSGI_APPLICATION = "api.wsgi.app"
 ASGI_APPLICATION = "config.asgi.application"
 
 DATABASES = {"default": env.db("DATABASE_URL")}
