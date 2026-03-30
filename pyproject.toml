@@ -35,6 +35,9 @@ dev = [
     "flake8>=7.0,<8.0",
 ]
 
+[project.scripts]
+app = "config.wsgi:app"
+
 [tool.setuptools.packages.find]
 include = ["apps*", "config*"]
 
