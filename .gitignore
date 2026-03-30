@@ -13,7 +13,6 @@ __pycache__/
 *.pyo
 *.pyd
 *.py,cover
-.python-version
 .pytest_cache/
 .mypy_cache/
 .ruff_cache/
