@@ -27,6 +27,12 @@ services:
           property: connectionString
       - key: CELERY_TASK_ALWAYS_EAGER
         value: "true"
+      - key: GUNICORN_WORKERS
+        value: "1"
+      - key: GUNICORN_THREADS
+        value: "2"
+      - key: GUNICORN_WORKER_CLASS
+        value: "gthread"
       - key: EMAIL_BACKEND
         value: "django.core.mail.backends.console.EmailBackend"
       - key: DEFAULT_FROM_EMAIL
