@@ -1,3 +1,4 @@
+import os
 from pathlib import Path
 
 import environ
@@ -14,12 +15,20 @@ environ.Env.read_env(BASE_DIR / ".env")
 
 SECRET_KEY = env("SECRET_KEY", default="insecure-development-key")
 DEBUG = env("DEBUG")
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["localhost", "127.0.0.1", ".vercel.app"])
+ALLOWED_HOSTS = env.list(
+    "ALLOWED_HOSTS",
+    default=["localhost", "127.0.0.1", ".onrender.com", ".vercel.app"],
+)
 CSRF_TRUSTED_ORIGINS = env.list(
     "CSRF_TRUSTED_ORIGINS",
-    default=["http://localhost", "http://127.0.0.1", "https://*.vercel.app"],
+    default=[
+        "http://localhost",
+        "http://127.0.0.1",
+        "https://*.onrender.com",
+        "https://*.vercel.app",
+    ],
 )
-SITE_URL = env("SITE_URL", default="http://localhost:8000")
+SITE_URL = env("SITE_URL", default=os.getenv("RENDER_EXTERNAL_URL", "http://localhost:8000"))
 
 DJANGO_APPS = [
     "django.contrib.admin",
@@ -137,7 +146,10 @@ if env("USE_S3"):
     AWS_STORAGE_BUCKET_NAME = env("AWS_STORAGE_BUCKET_NAME", default="")
     AWS_S3_ENDPOINT_URL = env("AWS_S3_ENDPOINT_URL", default="")
     AWS_S3_REGION_NAME = env("AWS_S3_REGION_NAME", default="")
-    AWS_QUERYSTRING_AUTH = False
+    AWS_S3_CUSTOM_DOMAIN = env("AWS_S3_CUSTOM_DOMAIN", default="")
+    AWS_S3_ADDRESSING_STYLE = env("AWS_S3_ADDRESSING_STYLE", default="")
+    AWS_QUERYSTRING_AUTH = env.bool("AWS_QUERYSTRING_AUTH", default=False)
+    AWS_S3_FILE_OVERWRITE = env.bool("AWS_S3_FILE_OVERWRITE", default=False)
     STORAGES["default"] = {
         "BACKEND": "storages.backends.s3.S3Storage",
         "OPTIONS": {
@@ -146,7 +158,11 @@ if env("USE_S3"):
             "bucket_name": AWS_STORAGE_BUCKET_NAME,
             "endpoint_url": AWS_S3_ENDPOINT_URL,
             "region_name": AWS_S3_REGION_NAME,
+            "custom_domain": AWS_S3_CUSTOM_DOMAIN or None,
+            "addressing_style": AWS_S3_ADDRESSING_STYLE or None,
             "querystring_auth": AWS_QUERYSTRING_AUTH,
+            "file_overwrite": AWS_S3_FILE_OVERWRITE,
+            "default_acl": None,
         },
     }
 
@@ -157,7 +173,7 @@ LOGIN_REDIRECT_URL = "users:dashboard"
 LOGIN_URL = "users:login"
 LOGOUT_REDIRECT_URL = "core:home"
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_BACKEND = env("EMAIL_BACKEND", default="django.core.mail.backends.smtp.EmailBackend")
 EMAIL_HOST = env("EMAIL_HOST", default="localhost")
 EMAIL_PORT = env.int("EMAIL_PORT", default=1025)
 EMAIL_HOST_USER = env("EMAIL_HOST_USER", default="")

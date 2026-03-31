@@ -227,6 +227,29 @@ Recommended VPS flow on Ubuntu:
 6. Use S3-compatible storage in production if you do not want local media persistence tied to the host.
 7. Run `docker compose up -d --build`.
 
+## Render deployment
+
+This repo includes a Render Blueprint in [render.yaml](/home/joce/autopazar/render.yaml).
+
+Render is suitable for demo/testing for this project, but free tier has important limits:
+
+- free web services spin down when idle
+- free Postgres expires after 30 days
+- free Key Value does not persist data
+- local uploaded media is not durable unless you enable S3-compatible storage
+
+For step-by-step instructions, see:
+
+- [render.md](/home/joce/autopazar/docs/deploy/render.md)
+
+The short version:
+
+1. Push the repo to GitHub.
+2. In Render create a `Blueprint`.
+3. Let Render provision the web service, Postgres, and Key Value from [render.yaml](/home/joce/autopazar/render.yaml).
+4. If you want persistent car photos, set `USE_S3=True` and add your S3/R2 environment variables.
+5. Run `sync_reference_data`, `seed_demo_data`, and `createsuperuser` from your local machine against the Render database.
+
 ## Production notes
 
 - Static files are collected on container start.
