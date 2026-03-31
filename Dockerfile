@@ -33,3 +33,5 @@ RUN useradd --create-home appuser \
     && chown -R appuser:appuser /app
 
 USER appuser
+
+CMD ["/app/docker/entrypoint.sh", "gunicorn", "config.wsgi:application", "-c", "docker/gunicorn/gunicorn.conf.py"]
