@@ -247,8 +247,9 @@ The short version:
 1. Push the repo to GitHub.
 2. In Render create a `Blueprint`.
 3. Let Render provision the web service, Postgres, and Key Value from [render.yaml](/home/joce/autopazar/render.yaml).
-4. If you want persistent car photos, set `USE_S3=True` and add your S3/R2 environment variables.
-5. Run `sync_reference_data`, `seed_demo_data`, and `createsuperuser` from your local machine against the Render database.
+4. On Render, `sync_reference_data` and `seed_demo_data` run automatically during container start, so the live site gets cities, brands, models, demo users, and demo listings without manual terminal steps.
+5. If you want persistent car photos, set `USE_S3=True` and add your S3/R2 environment variables.
+6. Create a superuser separately if you want Django admin access.
 
 ## Production notes
 

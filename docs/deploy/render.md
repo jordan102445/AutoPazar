@@ -24,6 +24,7 @@ Current free-tier behavior:
 - Redis-compatible Key Value is managed by Render
 - Celery tasks run inline via `CELERY_TASK_ALWAYS_EAGER=true`
 - email defaults to console backend unless you configure SMTP
+- reference data and demo data are loaded automatically on service start
 
 ## Create the Blueprint
 
@@ -71,17 +72,29 @@ If you create a public custom domain for the bucket, set `AWS_S3_CUSTOM_DOMAIN` 
 
 ## First-time remote setup
 
-Free Render web services do not provide shell / one-off jobs, so run the initial data load from your own machine against the Render database:
+The Blueprint already sets:
+
+- `AUTO_SYNC_REFERENCE_DATA=true`
+- `AUTO_SEED_DEMO_DATA=true`
+
+That means every Render deploy will automatically:
+
+- run migrations
+- collect static files
+- sync cities, brands, and models
+- insert/update demo users, listings, favorites, and inquiries
+
+So after deploy, the public site should already have data.
+
+You only need a local terminal if you want to create a Django admin user manually against the Render database:
 
 ```bash
 cd /home/joce/autopazar
 source .venv/bin/activate
 export DJANGO_SETTINGS_MODULE=config.settings.production
 export DATABASE_URL='<render external database url>'
-export REDIS_URL='<render key value url>'
+export REDIS_URL='redis://127.0.0.1:6379/0'
 export SECRET_KEY='<same value as Render web service>'
-python manage.py sync_reference_data
-python manage.py seed_demo_data
 python manage.py createsuperuser
 ```
 

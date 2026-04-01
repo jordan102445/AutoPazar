@@ -1,5 +1,4 @@
 from decimal import Decimal
-from random import choice, randint
 
 from django.contrib.auth import get_user_model
 from django.core.management.base import BaseCommand
@@ -20,14 +19,18 @@ class Command(BaseCommand):
         cities, _, _ = sync_city_reference_data()
         car_results = sync_car_reference_data()
         car_models = car_results["models"]
+        demo_colors = ["Бела", "Сива", "Црна", "Сина"]
+        demo_fuel_types = [FuelType.PETROL, FuelType.DIESEL, FuelType.HYBRID]
+        demo_transmissions = [TransmissionType.MANUAL, TransmissionType.AUTOMATIC]
+        demo_body_types = [BodyType.SEDAN, BodyType.HATCHBACK, BodyType.SUV]
 
         users = []
         for idx in range(1, 5):
             email = f"user{idx}@autopazar.mk"
-            user, created = User.objects.get_or_create(email=email, defaults={"is_active": True})
-            if created:
-                user.set_password("DemoPass123!")
-                user.save()
+            user, _ = User.objects.get_or_create(email=email, defaults={"is_active": True})
+            user.set_password("DemoPass123!")
+            user.is_active = True
+            user.save(update_fields=["password", "is_active"])
             user.profile.full_name = f"Демо корисник {idx}"
             user.profile.phone_number = f"+3897010000{idx}"
             user.profile.city = cities[(idx - 1) % len(cities)]
@@ -37,9 +40,11 @@ class Command(BaseCommand):
 
         listings = []
         for idx in range(1, 9):
-            selected_model = choice(car_models)
-            listing, _ = Listing.all_objects.get_or_create(
-                seller=choice(users),
+            selected_model = car_models[idx - 1]
+            seller = users[(idx - 1) % len(users)]
+            city = cities[(idx + 4) % len(cities)]
+            listing, _ = Listing.all_objects.update_or_create(
+                seller=seller,
                 title=f"{selected_model.brand.name} {selected_model.name} {2013 + idx}",
                 defaults={
                     "description": "Редовно сервисиран автомобил, во добра состојба, без скриени трошоци.",
@@ -47,13 +52,13 @@ class Command(BaseCommand):
                     "brand": selected_model.brand,
                     "car_model": selected_model,
                     "year": 2013 + idx,
-                    "mileage": randint(90000, 240000),
-                    "fuel_type": choice([FuelType.PETROL, FuelType.DIESEL, FuelType.HYBRID]),
-                    "transmission": choice([TransmissionType.MANUAL, TransmissionType.AUTOMATIC]),
-                    "body_type": choice([BodyType.SEDAN, BodyType.HATCHBACK, BodyType.SUV]),
-                    "color": choice(["Бела", "Сива", "Црна", "Сина"]),
+                    "mileage": 90000 + idx * 17500,
+                    "fuel_type": demo_fuel_types[(idx - 1) % len(demo_fuel_types)],
+                    "transmission": demo_transmissions[(idx - 1) % len(demo_transmissions)],
+                    "body_type": demo_body_types[(idx - 1) % len(demo_body_types)],
+                    "color": demo_colors[(idx - 1) % len(demo_colors)],
                     "condition": ListingCondition.USED,
-                    "city": choice(cities),
+                    "city": city,
                     "status": ListingStatus.ACTIVE,
                     "negotiable": True,
                     "show_phone": True,
